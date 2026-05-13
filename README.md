@@ -77,11 +77,9 @@ html,body { height:100%; background:var(--bg); font-family:var(--font); color:va
 /* ── PIPELINE GRID ── */
 .pipeline {
   display:grid;
-  grid-template-columns:repeat(5,220px) ;
-  grid-template-columns:220px 44px 220px 44px 220px 44px 220px 44px 220px;
+  grid-template-columns:minmax(160px,1fr) 44px minmax(160px,1fr) 44px minmax(160px,1fr) 44px minmax(160px,1fr) 44px minmax(160px,1fr);
   align-items:start; gap:0;
   position:relative; z-index:1;
-  min-width:1100px;
 }
 
 .arrow-col {
@@ -166,7 +164,7 @@ html,body { height:100%; background:var(--bg); font-family:var(--font); color:va
 .l5 .node.accent{ border-color:#1D4ED8; background:#101D2E; }
 
 /* ── BOTTOM SECTIONS ── */
-.bottom-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px; position:relative; z-index:1; min-width:1100px; }
+.bottom-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px; position:relative; z-index:1; }
 .bottom-section { border-radius:11px; padding:16px 18px; border:1px solid; }
 .bottom-title {
   font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.8px;
@@ -207,7 +205,6 @@ html,body { height:100%; background:var(--bg); font-family:var(--font); color:va
 .footer {
   margin-top:18px; display:flex; align-items:center; justify-content:space-between;
   position:relative; z-index:1; border-top:1px solid #21262D; padding-top:12px;
-  min-width:1100px;
 }
 .tech-row { display:flex; gap:8px; flex-wrap:wrap; }
 .tech-badge {
@@ -343,13 +340,9 @@ html,body { height:100%; background:var(--bg); font-family:var(--font); color:va
 
 /* ── RESPONSIVE: TABLET ── */
 @media (max-width:1200px) {
-  .map-area { overflow-x:auto; }
   .pipeline {
-    grid-template-columns:175px 38px 175px 38px 175px 38px 175px 38px 175px;
-    min-width:880px;
+    grid-template-columns:minmax(130px,1fr) 38px minmax(130px,1fr) 38px minmax(130px,1fr) 38px minmax(130px,1fr) 38px minmax(130px,1fr);
   }
-  .bottom-row { min-width:880px; }
-  .footer     { min-width:880px; }
 }
 
 /* ── RESPONSIVE: MOBILE ── */
