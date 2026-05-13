@@ -35,7 +35,7 @@ La logica di fondo è quella del dato come risorsa: ogni intervento registrato, 
   --mono: 'DM Mono', monospace;
 }
 
-html,body { height:100%; background:var(--bg); font-family:var(--font); color:var(--text); overflow-x:hidden; }
+html,body { height:100%; background:var(--bg); font-family:var(--font); color:var(--text); }
 
 /* ── LAYOUT SHELL ── */
 .shell { display:flex; height:100vh; }
@@ -43,11 +43,10 @@ html,body { height:100%; background:var(--bg); font-family:var(--font); color:va
 .map-area {
   flex:1;
   overflow:auto;
-  padding:24px 28px 40px;
+  padding:28px 32px 44px;
   transition:margin-right .35s cubic-bezier(.4,0,.2,1);
-  min-width:0;
 }
-.map-area.shifted { margin-right:var(--panel-w); padding-right:18px; }
+.map-area.shifted { margin-right:var(--panel-w); }
 
 /* Grid bg */
 .map-area::before {
@@ -80,10 +79,10 @@ html,body { height:100%; background:var(--bg); font-family:var(--font); color:va
 /* ── PIPELINE GRID ── */
 .pipeline {
   display:grid;
-  grid-template-columns:minmax(0,1fr) 40px minmax(0,1fr) 40px minmax(0,1fr) 40px minmax(0,1fr) 40px minmax(0,1fr);
+  grid-template-columns:1fr 40px 1fr 40px 1fr 40px 1fr 40px 1fr;
   align-items:start; gap:0;
   position:relative; z-index:1;
-  width:100%;
+  min-width:900px;
 }
 
 .arrow-col {
@@ -93,7 +92,7 @@ html,body { height:100%; background:var(--bg); font-family:var(--font); color:va
 .arrow-svg { width:44px; height:28px; }
 
 /* ── LAYER ── */
-.layer { display:flex; flex-direction:column; gap:7px; min-width:0; }
+.layer { display:flex; flex-direction:column; gap:7px; }
 .layer-header { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
 .layer-num { font:500 10px/1 var(--mono); color:var(--faint); letter-spacing:1px; }
 .layer-name { font-size:11px; font-weight:600; letter-spacing:.8px; text-transform:uppercase; }
@@ -104,17 +103,17 @@ html,body { height:100%; background:var(--bg); font-family:var(--font); color:va
   border:1px solid; position:relative;
   cursor:pointer;
   transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
-  user-select:none; min-width:0; overflow:hidden;
+  user-select:none;
 }
 .node:hover { transform:translateY(-2px); }
 .node.active { outline:2px solid; outline-offset:2px; }
 
-.node-title { font-size:12px; font-weight:600; line-height:1.3; margin-bottom:3px; overflow-wrap:break-word; }
-.node-desc  { font-size:10px; font-weight:400; line-height:1.5; opacity:.7; overflow-wrap:break-word; }
+.node-title { font-size:12px; font-weight:600; line-height:1.3; margin-bottom:3px; }
+.node-desc  { font-size:10px; font-weight:400; line-height:1.5; opacity:.7; }
 .node-tag   {
-  display:block; font:500 9px/1 var(--mono);
+  display:inline-block; font:500 9px/1 var(--mono);
   padding:2px 7px; border-radius:4px; margin-top:6px; letter-spacing:.4px;
-  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
 }
 .node-click-hint {
   position:absolute; top:8px; right:10px;
@@ -169,7 +168,7 @@ html,body { height:100%; background:var(--bg); font-family:var(--font); color:va
 .l5 .node.accent{ border-color:#1D4ED8; background:#101D2E; }
 
 /* ── BOTTOM SECTIONS ── */
-.bottom-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px; position:relative; z-index:1; }
+.bottom-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px; position:relative; z-index:1; min-width:900px; }
 .bottom-section { border-radius:11px; padding:16px 18px; border:1px solid; }
 .bottom-title {
   font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.8px;
@@ -210,6 +209,7 @@ html,body { height:100%; background:var(--bg); font-family:var(--font); color:va
 .footer {
   margin-top:18px; display:flex; align-items:center; justify-content:space-between;
   position:relative; z-index:1; border-top:1px solid #21262D; padding-top:12px;
+  min-width:900px;
 }
 .tech-row { display:flex; gap:8px; flex-wrap:wrap; }
 .tech-badge {
@@ -345,10 +345,7 @@ html,body { height:100%; background:var(--bg); font-family:var(--font); color:va
 
 /* ── RESPONSIVE: TABLET ── */
 @media (max-width:1200px) {
-  .map-area { padding:18px 18px 36px; }
-  .pipeline {
-    grid-template-columns:minmax(0,1fr) 36px minmax(0,1fr) 36px minmax(0,1fr) 36px minmax(0,1fr) 36px minmax(0,1fr);
-  }
+  .map-area { padding:20px 20px 36px; }
 }
 
 /* ── RESPONSIVE: MOBILE ── */
