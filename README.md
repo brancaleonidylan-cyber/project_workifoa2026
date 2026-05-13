@@ -1,5 +1,7 @@
-# project_workifoa2026
-Illustrazione project work 
+# project_workifoa2026- Green Control — Sistema di Business Intelligence
+Il progetto nasce dall'esigenza concreta di un'azienda operativa — Green Control Disinfestazioni — di trasformare i propri dati operativi in informazioni utili a prendere decisioni. Anziché fermarsi a un semplice dashboard, è stata progettata una pipeline completa: i dati vengono raccolti, puliti, aggregati e resi disponibili sia a livello direzionale che operativo.
+
+La logica di fondo è quella del dato come risorsa: ogni intervento registrato, ogni cliente, ogni prodotto in magazzino diventa un'informazione strutturata che alimenta KPI strategici — dal tasso di abbandono clienti alla marginalità per tecnico, dalla stagionalità degli infestanti al rispetto degli SLA contrattuali.
 
 <!DOCTYPE html>
 <html lang="it">
@@ -28,7 +30,7 @@ Illustrazione project work
   --purple-d: #120D1E;
   --blue:     #60A5FA;
   --blue-d:   #0C1626;
-  --panel-w:  440px;
+  --panel-w:  380px;
   --font: 'DM Sans', sans-serif;
   --mono: 'DM Mono', monospace;
 }
@@ -41,10 +43,11 @@ html,body { height:100%; background:var(--bg); font-family:var(--font); color:va
 .map-area {
   flex:1;
   overflow:auto;
-  padding:32px 40px 48px;
+  padding:24px 28px 40px;
   transition:margin-right .35s cubic-bezier(.4,0,.2,1);
+  min-width:0;
 }
-.map-area.shifted { margin-right:var(--panel-w); }
+.map-area.shifted { margin-right:var(--panel-w); padding-right:18px; }
 
 /* Grid bg */
 .map-area::before {
@@ -77,9 +80,10 @@ html,body { height:100%; background:var(--bg); font-family:var(--font); color:va
 /* ── PIPELINE GRID ── */
 .pipeline {
   display:grid;
-  grid-template-columns:minmax(160px,1fr) 44px minmax(160px,1fr) 44px minmax(160px,1fr) 44px minmax(160px,1fr) 44px minmax(160px,1fr);
+  grid-template-columns:minmax(0,1fr) 40px minmax(0,1fr) 40px minmax(0,1fr) 40px minmax(0,1fr) 40px minmax(0,1fr);
   align-items:start; gap:0;
   position:relative; z-index:1;
+  width:100%;
 }
 
 .arrow-col {
@@ -89,7 +93,7 @@ html,body { height:100%; background:var(--bg); font-family:var(--font); color:va
 .arrow-svg { width:44px; height:28px; }
 
 /* ── LAYER ── */
-.layer { display:flex; flex-direction:column; gap:7px; }
+.layer { display:flex; flex-direction:column; gap:7px; min-width:0; }
 .layer-header { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
 .layer-num { font:500 10px/1 var(--mono); color:var(--faint); letter-spacing:1px; }
 .layer-name { font-size:11px; font-weight:600; letter-spacing:.8px; text-transform:uppercase; }
@@ -100,16 +104,17 @@ html,body { height:100%; background:var(--bg); font-family:var(--font); color:va
   border:1px solid; position:relative;
   cursor:pointer;
   transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
-  user-select:none;
+  user-select:none; min-width:0; overflow:hidden;
 }
 .node:hover { transform:translateY(-2px); }
 .node.active { outline:2px solid; outline-offset:2px; }
 
-.node-title { font-size:12px; font-weight:600; line-height:1.3; margin-bottom:3px; }
-.node-desc  { font-size:10px; font-weight:400; line-height:1.5; opacity:.7; }
+.node-title { font-size:12px; font-weight:600; line-height:1.3; margin-bottom:3px; overflow-wrap:break-word; }
+.node-desc  { font-size:10px; font-weight:400; line-height:1.5; opacity:.7; overflow-wrap:break-word; }
 .node-tag   {
-  display:inline-block; font:500 9px/1 var(--mono);
+  display:block; font:500 9px/1 var(--mono);
   padding:2px 7px; border-radius:4px; margin-top:6px; letter-spacing:.4px;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
 }
 .node-click-hint {
   position:absolute; top:8px; right:10px;
@@ -340,8 +345,9 @@ html,body { height:100%; background:var(--bg); font-family:var(--font); color:va
 
 /* ── RESPONSIVE: TABLET ── */
 @media (max-width:1200px) {
+  .map-area { padding:18px 18px 36px; }
   .pipeline {
-    grid-template-columns:minmax(130px,1fr) 38px minmax(130px,1fr) 38px minmax(130px,1fr) 38px minmax(130px,1fr) 38px minmax(130px,1fr);
+    grid-template-columns:minmax(0,1fr) 36px minmax(0,1fr) 36px minmax(0,1fr) 36px minmax(0,1fr) 36px minmax(0,1fr);
   }
 }
 
