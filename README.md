@@ -82,7 +82,8 @@ html,body { height:100%; background:var(--bg); font-family:var(--font); color:va
   grid-template-columns:1fr 40px 1fr 40px 1fr 40px 1fr 40px 1fr;
   align-items:start; gap:0;
   position:relative; z-index:1;
-  min-width:900px;
+  width:100%;
+  overflow-x:auto;
 }
 
 .arrow-col {
@@ -168,7 +169,7 @@ html,body { height:100%; background:var(--bg); font-family:var(--font); color:va
 .l5 .node.accent{ border-color:#1D4ED8; background:#101D2E; }
 
 /* ── BOTTOM SECTIONS ── */
-.bottom-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px; position:relative; z-index:1; min-width:900px; }
+.bottom-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px; position:relative; z-index:1; width:100%; overflow-x:auto; }
 .bottom-section { border-radius:11px; padding:16px 18px; border:1px solid; }
 .bottom-title {
   font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.8px;
@@ -209,7 +210,7 @@ html,body { height:100%; background:var(--bg); font-family:var(--font); color:va
 .footer {
   margin-top:18px; display:flex; align-items:center; justify-content:space-between;
   position:relative; z-index:1; border-top:1px solid #21262D; padding-top:12px;
-  min-width:900px;
+  width:100%;
 }
 .tech-row { display:flex; gap:8px; flex-wrap:wrap; }
 .tech-badge {
