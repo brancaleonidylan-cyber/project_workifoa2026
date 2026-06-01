@@ -1,7 +1,21 @@
-# project_workifoa2026- Green Control — Sistema di Business Intelligence
-Il progetto nasce dall'esigenza concreta di un'azienda operativa — Green Control Disinfestazioni — di trasformare i propri dati operativi in informazioni utili a prendere decisioni. Anziché fermarsi a un semplice dashboard, è stata progettata una pipeline completa: i dati vengono raccolti, puliti, aggregati e resi disponibili sia a livello direzionale che operativo.
+Green Control BI — Project Work IFOA 2026
+Sistema di Business Intelligence per Green Control (azienda reale di disinfestazione). Pipeline end-to-end: Excel → ETL Python → MySQL Data Warehouse → Power BI → Streamlit.
 
-La logica di fondo è quella del dato come risorsa: ogni intervento registrato, ogni cliente, ogni prodotto in magazzino diventa un'informazione strutturata che alimenta KPI strategici — dal tasso di abbandono clienti alla marginalità per tecnico, dalla stagionalità degli infestanti al rispetto degli SLA contrattuali.
+Autore: Dylan Brancaleoni · BI Analyst · IFOA 2026
+Il sito
+index.html è una landing page statica (single-file, nessuna dipendenza) che presenta il project work con motion design:
+
+Sfondo animato: rete di particelle verdi + blob gradiente "aurora" fluttuanti
+Pipeline a 5 layer che si illumina in sequenza con flusso dati animato
+Numeri KPI con count-up animato all'ingresso in viewport
+Rispetta prefers-reduced-motion per l'accessibilità
+Come pubblicare su GitHub Pages
+Crea/usa la repo project_workifoa2026.
+Carica index.html (e questo README.md) nella root.
+Settings → Pages → Source: branch main, cartella /root.
+Il sito sarà online su https://<utente>.github.io/project_workifoa2026/.
+Stack del progetto
+Python 3.13 · pandas · MySQL 8.0 · Power BI · Streamlit · Plotly · bcrypt
 
 <!DOCTYPE html>
 <html lang="it">
