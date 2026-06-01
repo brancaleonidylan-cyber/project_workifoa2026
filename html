@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Green Control BI — Dylan Brancaleoni | Project Work IFOA 2026</title>
+<meta name="description" content="Sistema di Business Intelligence per Green Control: pipeline Excel → Python ETL → MySQL → Power BI → Streamlit. Project Work IFOA 2026 di Dylan Brancaleoni.">
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -23,22 +24,37 @@
   --sans:'Inter',sans-serif;
 }
 html{scroll-behavior:smooth}
-body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+
+/* ── ANIMATED BACKGROUND LAYERS ── */
+#bg-canvas{position:fixed;inset:0;z-index:-2;display:block}
+#bg-aurora{position:fixed;inset:0;z-index:-3;overflow:hidden;pointer-events:none}
+.blob{
+  position:absolute;border-radius:50%;filter:blur(80px);opacity:.5;
+  mix-blend-mode:screen;will-change:transform;
+}
+.blob.b1{width:46vw;height:46vw;background:radial-gradient(circle,rgba(29,184,122,.55),transparent 70%);top:-10%;left:-8%;animation:float1 22s ease-in-out infinite}
+.blob.b2{width:38vw;height:38vw;background:radial-gradient(circle,rgba(110,231,183,.4),transparent 70%);bottom:-12%;right:-6%;animation:float2 28s ease-in-out infinite}
+.blob.b3{width:30vw;height:30vw;background:radial-gradient(circle,rgba(16,120,80,.5),transparent 70%);top:40%;left:55%;animation:float3 25s ease-in-out infinite}
+@keyframes float1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(8vw,12vh) scale(1.15)}}
+@keyframes float2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-10vw,-8vh) scale(1.2)}}
+@keyframes float3{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-6vw,10vh) scale(.85)}}
 
 /* ── SCROLL PROGRESS ── */
-#progress{position:fixed;top:0;left:0;height:3px;background:var(--green);z-index:999;transition:width .1s}
+#progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--green-d),var(--green),var(--green-l));z-index:999;transition:width .1s;box-shadow:0 0 12px rgba(29,184,122,.6)}
 
 /* ── NAV ── */
 nav{
   position:fixed;top:0;left:0;right:0;z-index:100;
   display:flex;align-items:center;justify-content:space-between;
   padding:0 48px;height:60px;
-  background:rgba(10,15,13,.9);
+  background:rgba(10,15,13,.72);
   backdrop-filter:blur(12px);
   border-bottom:1px solid var(--border);
 }
 .nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px}
-.nav-dot{width:28px;height:28px;background:var(--green);border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:700;color:#000}
+.nav-dot{width:28px;height:28px;background:var(--green);border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:700;color:#000;box-shadow:0 0 0 0 rgba(29,184,122,.5);animation:pulse 3s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(29,184,122,.5)}70%{box-shadow:0 0 0 10px rgba(29,184,122,0)}100%{box-shadow:0 0 0 0 rgba(29,184,122,0)}}
 .nav-links{display:flex;gap:28px}
 .nav-links a{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;transition:color .2s}
 .nav-links a:hover{color:var(--green)}
@@ -46,9 +62,9 @@ nav{
   padding:7px 18px;border-radius:8px;
   background:var(--green);color:#000;
   font-size:13px;font-weight:700;text-decoration:none;
-  transition:opacity .2s;
+  transition:opacity .2s,transform .2s;
 }
-.nav-cta:hover{opacity:.85}
+.nav-cta:hover{opacity:.85;transform:translateY(-1px)}
 
 /* ── HERO ── */
 .hero{
@@ -59,7 +75,7 @@ nav{
 }
 .hero::before{
   content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(29,184,122,.12) 0%,transparent 70%);
+  background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(29,184,122,.10) 0%,transparent 70%);
   pointer-events:none;
 }
 .hero-badge{
@@ -69,6 +85,7 @@ nav{
   background:rgba(29,184,122,.08);
   font-size:12px;font-family:var(--mono);color:var(--green);
   margin-bottom:28px;
+  opacity:0;animation:riseIn .8s .1s forwards;
 }
 .badge-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:blink 2s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
@@ -76,20 +93,27 @@ nav{
   font-size:clamp(2.4rem,6vw,4.2rem);font-weight:800;
   line-height:1.1;letter-spacing:-.03em;
   margin-bottom:20px;
+  opacity:0;animation:riseIn .9s .25s forwards;
 }
-.hero h1 span{color:var(--green)}
+.hero h1 span{
+  background:linear-gradient(120deg,var(--green-l),var(--green));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 18px rgba(29,184,122,.35));
+}
 .hero p{
   max-width:600px;font-size:1.05rem;color:var(--muted);
   line-height:1.7;margin-bottom:40px;
+  opacity:0;animation:riseIn .9s .4s forwards;
 }
-.hero-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;opacity:0;animation:riseIn .9s .55s forwards}
+@keyframes riseIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 .btn-primary{
   padding:13px 28px;border-radius:10px;
   background:var(--green);color:#000;
   font-weight:700;font-size:14px;text-decoration:none;
   transition:transform .2s,box-shadow .2s;
 }
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(29,184,122,.35)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(29,184,122,.45)}
 .btn-secondary{
   padding:13px 28px;border-radius:10px;
   border:1px solid var(--border);color:var(--text);
@@ -103,8 +127,9 @@ nav{
 .stats{
   display:flex;justify-content:center;gap:0;
   border:1px solid var(--border);border-radius:14px;
-  background:var(--bg2);overflow:hidden;
-  max-width:700px;margin:56px auto 0;
+  background:rgba(17,24,20,.7);backdrop-filter:blur(6px);overflow:hidden;
+  max-width:760px;margin:56px auto 0;
+  opacity:0;animation:riseIn .9s .7s forwards;
 }
 .stat{
   flex:1;padding:20px 16px;text-align:center;
@@ -115,7 +140,7 @@ nav{
 .stat-lab{font-size:11px;color:var(--muted);margin-top:5px;text-transform:uppercase;letter-spacing:.6px}
 
 /* ── SECTION ── */
-section{padding:96px 24px}
+section{padding:96px 24px;position:relative}
 .section-inner{max-width:1100px;margin:0 auto}
 .section-label{
   font-size:11px;font-family:var(--mono);color:var(--green);
@@ -132,15 +157,33 @@ section{padding:96px 24px}
   position:relative;
 }
 .pipeline-step:not(:last-child)::after{
-  content:'→';position:absolute;right:-18px;top:28px;
-  color:var(--border);font-size:20px;font-weight:300;
+  content:'';position:absolute;right:-6px;top:27px;width:36px;height:2px;
+  background:linear-gradient(90deg,var(--border),var(--border));
+  overflow:hidden;
 }
+/* animated data flow dot riding the connector */
+.pipeline-step:not(:last-child)::before{
+  content:'';position:absolute;right:-6px;top:24px;z-index:2;
+  width:8px;height:8px;border-radius:50%;
+  background:var(--green);box-shadow:0 0 10px var(--green);
+  opacity:0;
+}
+.pipeline.run .pipeline-step:not(:last-child)::before{
+  animation:flowDot 2.4s linear infinite;
+}
+.pipeline.run .pipeline-step:nth-child(1)::before{animation-delay:0s}
+.pipeline.run .pipeline-step:nth-child(2)::before{animation-delay:.6s}
+.pipeline.run .pipeline-step:nth-child(3)::before{animation-delay:1.2s}
+.pipeline.run .pipeline-step:nth-child(4)::before{animation-delay:1.8s}
+@keyframes flowDot{0%{transform:translateX(0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateX(36px);opacity:0}}
 .p-icon{
   width:56px;height:56px;border-radius:14px;
   display:flex;align-items:center;justify-content:center;
   font-size:22px;margin-bottom:14px;
-  border:1px solid;
+  border:1px solid;position:relative;z-index:3;
+  transition:transform .4s ease,box-shadow .4s ease;
 }
+.pipeline-step.lit .p-icon{transform:scale(1.12);box-shadow:0 0 28px rgba(29,184,122,.45)}
 .p-name{font-size:12px;font-weight:700;margin-bottom:4px;text-align:center}
 .p-tech{font-size:10px;font-family:var(--mono);color:var(--muted);text-align:center;line-height:1.5}
 
@@ -148,9 +191,9 @@ section{padding:96px 24px}
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
 .kpi-card{
   border-radius:12px;padding:20px;border:1px solid;
-  transition:transform .2s,box-shadow .2s;
+  transition:transform .2s,box-shadow .2s;backdrop-filter:blur(4px);
 }
-.kpi-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.3)}
+.kpi-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.35)}
 .kpi-icon{font-size:22px;margin-bottom:10px}
 .kpi-name{font-size:13px;font-weight:700;margin-bottom:4px}
 .kpi-desc{font-size:11px;color:var(--muted);line-height:1.5}
@@ -163,11 +206,11 @@ section{padding:96px 24px}
 .tech-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
 .tech-card{
   border-radius:10px;padding:16px 18px;
-  background:var(--bg2);border:1px solid var(--border);
-  display:flex;align-items:center;gap:12px;
-  transition:border-color .2s;
+  background:rgba(17,24,20,.7);border:1px solid var(--border);
+  display:flex;align-items:center;gap:12px;backdrop-filter:blur(4px);
+  transition:border-color .2s,transform .2s;
 }
-.tech-card:hover{border-color:var(--green)}
+.tech-card:hover{border-color:var(--green);transform:translateY(-3px)}
 .tech-logo{font-size:24px;flex-shrink:0}
 .tech-name{font-size:13px;font-weight:600}
 .tech-role{font-size:11px;color:var(--muted)}
@@ -177,8 +220,10 @@ section{padding:96px 24px}
 .sec-item{
   display:flex;align-items:flex-start;gap:12px;
   padding:16px;border-radius:10px;
-  background:var(--bg2);border:1px solid var(--border);
+  background:rgba(17,24,20,.7);border:1px solid var(--border);backdrop-filter:blur(4px);
+  transition:border-color .2s,transform .2s;
 }
+.sec-item:hover{border-color:var(--green);transform:translateY(-3px)}
 .sec-ic{font-size:20px;flex-shrink:0;margin-top:2px}
 .sec-t{font-size:13px;font-weight:600;margin-bottom:3px}
 .sec-d{font-size:11px;color:var(--muted);line-height:1.5}
@@ -187,13 +232,16 @@ section{padding:96px 24px}
 footer{
   border-top:1px solid var(--border);
   padding:40px 24px;text-align:center;
-  color:var(--muted);font-size:12px;
+  color:var(--muted);font-size:12px;position:relative;
 }
 footer a{color:var(--green);text-decoration:none}
 .footer-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
 
 /* ── DIVIDER ── */
 .divider{height:1px;background:var(--border);margin:0 auto;max-width:1100px}
+
+/* sections that sit above background get translucent tint */
+.tinted{background:rgba(17,24,20,.55);backdrop-filter:blur(6px)}
 
 /* ── RESPONSIVE ── */
 @media(max-width:768px){
@@ -203,12 +251,27 @@ footer a{color:var(--green);text-decoration:none}
   .stat{border-right:none;border-bottom:1px solid var(--border)}
   .stat:last-child{border-bottom:none}
   .pipeline{flex-direction:column;gap:20px}
-  .pipeline-step:not(:last-child)::after{display:none}
+  .pipeline-step:not(:last-child)::after,.pipeline-step:not(:last-child)::before{display:none}
   .footer-inner{flex-direction:column;text-align:center}
+}
+
+/* ── ACCESSIBILITY: reduce motion ── */
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .hero-badge,.hero h1,.hero p,.hero-btns,.stats{opacity:1!important}
+  #bg-canvas,#bg-aurora{display:none}
 }
 </style>
 </head>
 <body>
+
+<!-- ANIMATED BACKGROUND -->
+<div id="bg-aurora">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+</div>
+<canvas id="bg-canvas"></canvas>
 
 <div id="progress"></div>
 
@@ -241,11 +304,11 @@ footer a{color:var(--green);text-decoration:none}
   </div>
 
   <div class="stats">
-    <div class="stat"><div class="stat-val">689</div><div class="stat-lab">Righe caricate</div></div>
-    <div class="stat"><div class="stat-val">7</div><div class="stat-lab">KPI strategici</div></div>
-    <div class="stat"><div class="stat-val">€5.740</div><div class="stat-lab">CLV medio cliente</div></div>
-    <div class="stat"><div class="stat-val">5</div><div class="stat-lab">Layer architetturali</div></div>
-    <div class="stat"><div class="stat-val">50h</div><div class="stat-lab">SLA medio risposta</div></div>
+    <div class="stat"><div class="stat-val" data-target="689">0</div><div class="stat-lab">Righe caricate</div></div>
+    <div class="stat"><div class="stat-val" data-target="7">0</div><div class="stat-lab">KPI strategici</div></div>
+    <div class="stat"><div class="stat-val" data-target="5740" data-prefix="€" data-sep>0</div><div class="stat-lab">CLV medio cliente</div></div>
+    <div class="stat"><div class="stat-val" data-target="5">0</div><div class="stat-lab">Layer architetturali</div></div>
+    <div class="stat"><div class="stat-val" data-target="50" data-suffix="h">0</div><div class="stat-lab">SLA medio risposta</div></div>
   </div>
 </section>
 
@@ -291,7 +354,7 @@ footer a{color:var(--green);text-decoration:none}
 <div class="divider"></div>
 
 <!-- KPI -->
-<section id="kpi" style="background:var(--bg2)">
+<section id="kpi" class="tinted">
   <div class="section-inner">
     <div class="section-label">// KPI Strategici</div>
     <h2 class="section-title">7 indicatori che guidano le decisioni</h2>
@@ -393,7 +456,7 @@ footer a{color:var(--green);text-decoration:none}
 <div class="divider"></div>
 
 <!-- SECURITY -->
-<section id="security" style="background:var(--bg2)">
+<section id="security" class="tinted">
   <div class="section-inner">
     <div class="section-label">// Security</div>
     <h2 class="section-title">12 layer di protezione</h2>
@@ -445,29 +508,146 @@ footer a{color:var(--green);text-decoration:none}
 </footer>
 
 <script>
-// Scroll progress bar
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ── Scroll progress bar ── */
 window.addEventListener('scroll', () => {
   const el = document.getElementById('progress');
   const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
   el.style.width = Math.min(pct, 100) + '%';
 });
 
-// Fade-in on scroll
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.style.opacity = '1';
-      e.target.style.transform = 'translateY(0)';
-    }
-  });
-}, { threshold: 0.1 });
+/* ── Particle network background ── */
+(function(){
+  if (reduceMotion) return;
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let w, h, particles, dpr;
+  const mouse = { x: null, y: null };
 
-document.querySelectorAll('.kpi-card, .tech-card, .sec-item, .pipeline-step').forEach(el => {
+  function resize(){
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = canvas.width = innerWidth * dpr;
+    h = canvas.height = innerHeight * dpr;
+    canvas.style.width = innerWidth + 'px';
+    canvas.style.height = innerHeight + 'px';
+    const count = Math.min(90, Math.floor(innerWidth * innerHeight / 16000));
+    particles = Array.from({length: count}, () => ({
+      x: Math.random()*w, y: Math.random()*h,
+      vx: (Math.random()-.5)*.35*dpr, vy: (Math.random()-.5)*.35*dpr,
+      r: (Math.random()*1.6+.6)*dpr
+    }));
+  }
+  window.addEventListener('mousemove', e => { mouse.x = e.clientX*dpr; mouse.y = e.clientY*dpr; });
+  window.addEventListener('mouseout', () => { mouse.x = mouse.y = null; });
+
+  const LINK = 130;
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    for (const p of particles){
+      p.x += p.vx; p.y += p.vy;
+      if (p.x<0||p.x>w) p.vx*=-1;
+      if (p.y<0||p.y>h) p.vy*=-1;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle = 'rgba(29,184,122,.7)';
+      ctx.fill();
+    }
+    const link = LINK*dpr;
+    for (let i=0;i<particles.length;i++){
+      for (let j=i+1;j<particles.length;j++){
+        const a=particles[i], b=particles[j];
+        const dx=a.x-b.x, dy=a.y-b.y, d=Math.hypot(dx,dy);
+        if (d<link){
+          ctx.beginPath();
+          ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+          ctx.strokeStyle = 'rgba(29,184,122,'+(.16*(1-d/link))+')';
+          ctx.lineWidth = dpr;
+          ctx.stroke();
+        }
+      }
+      if (mouse.x!=null){
+        const a=particles[i];
+        const dx=a.x-mouse.x, dy=a.y-mouse.y, d=Math.hypot(dx,dy);
+        if (d<link*1.4){
+          ctx.beginPath();
+          ctx.moveTo(a.x,a.y); ctx.lineTo(mouse.x,mouse.y);
+          ctx.strokeStyle = 'rgba(110,231,183,'+(.25*(1-d/(link*1.4)))+')';
+          ctx.lineWidth = dpr;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  draw();
+})();
+
+/* ── Animated count-up stats ── */
+function animateCount(el){
+  const target = +el.dataset.target;
+  const suffix = el.dataset.suffix || '';
+  const prefix = el.dataset.prefix || '';
+  const sep = el.hasAttribute('data-sep');
+  const dur = 1400; const start = performance.now();
+  function fmt(n){
+    n = Math.round(n);
+    return prefix + (sep ? n.toLocaleString('it-IT') : n) + suffix;
+  }
+  function step(now){
+    const t = Math.min((now-start)/dur, 1);
+    const eased = 1 - Math.pow(1-t, 3);
+    el.textContent = fmt(target*eased);
+    if (t<1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+/* ── Generic reveal + targeted triggers ── */
+const revealEls = document.querySelectorAll('.kpi-card, .tech-card, .sec-item, .pipeline-step');
+revealEls.forEach(el => {
   el.style.opacity = '0';
   el.style.transform = 'translateY(20px)';
   el.style.transition = 'opacity .5s ease, transform .5s ease';
-  observer.observe(el);
 });
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting){
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+      revealObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+revealEls.forEach(el => revealObs.observe(el));
+
+/* stats count-up when hero stats enter view */
+const statsObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting){
+      e.target.querySelectorAll('.stat-val').forEach(animateCount);
+      statsObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.4 });
+const statsEl = document.querySelector('.stats');
+if (statsEl) statsObs.observe(statsEl);
+
+/* ── Pipeline sequential light-up + data flow ── */
+const pipeline = document.querySelector('.pipeline');
+const pipeSteps = document.querySelectorAll('.pipeline-step');
+const pipeObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting){
+      pipeSteps.forEach((s, i) => setTimeout(() => s.classList.add('lit'), 250 + i*350));
+      if (!reduceMotion) pipeline.classList.add('run');
+      pipeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+if (pipeline) pipeObs.observe(pipeline);
 </script>
 </body>
 </html>
