@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Green Control BI — Dylan Brancaleoni | Project Work IFOA 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0f0d;
+  --bg2:#111814;
+  --bg3:#1a2420;
+  --green:#1DB87A;
+  --green-d:#0a5c36;
+  --green-l:#6EE7B7;
+  --amber:#F59E0B;
+  --red:#EF4444;
+  --text:#F0F0EE;
+  --muted:#8BA89E;
+  --border:#1f3028;
+  --mono:'JetBrains Mono',monospace;
+  --sans:'Inter',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+
+/* ── SCROLL PROGRESS ── */
+#progress{position:fixed;top:0;left:0;height:3px;background:var(--green);z-index:999;transition:width .1s}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 48px;height:60px;
+  background:rgba(10,15,13,.9);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px}
+.nav-dot{width:28px;height:28px;background:var(--green);border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:700;color:#000}
+.nav-links{display:flex;gap:28px}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--green)}
+.nav-cta{
+  padding:7px 18px;border-radius:8px;
+  background:var(--green);color:#000;
+  font-size:13px;font-weight:700;text-decoration:none;
+  transition:opacity .2s;
+}
+.nav-cta:hover{opacity:.85}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:100px 24px 80px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(29,184,122,.12) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:5px 14px;border-radius:20px;
+  border:1px solid rgba(29,184,122,.3);
+  background:rgba(29,184,122,.08);
+  font-size:12px;font-family:var(--mono);color:var(--green);
+  margin-bottom:28px;
+}
+.badge-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero h1{
+  font-size:clamp(2.4rem,6vw,4.2rem);font-weight:800;
+  line-height:1.1;letter-spacing:-.03em;
+  margin-bottom:20px;
+}
+.hero h1 span{color:var(--green)}
+.hero p{
+  max-width:600px;font-size:1.05rem;color:var(--muted);
+  line-height:1.7;margin-bottom:40px;
+}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.btn-primary{
+  padding:13px 28px;border-radius:10px;
+  background:var(--green);color:#000;
+  font-weight:700;font-size:14px;text-decoration:none;
+  transition:transform .2s,box-shadow .2s;
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(29,184,122,.35)}
+.btn-secondary{
+  padding:13px 28px;border-radius:10px;
+  border:1px solid var(--border);color:var(--text);
+  font-weight:600;font-size:14px;text-decoration:none;
+  background:rgba(255,255,255,.04);
+  transition:border-color .2s,background .2s;
+}
+.btn-secondary:hover{border-color:var(--green);background:rgba(29,184,122,.06)}
+
+/* ── STATS BAR ── */
+.stats{
+  display:flex;justify-content:center;gap:0;
+  border:1px solid var(--border);border-radius:14px;
+  background:var(--bg2);overflow:hidden;
+  max-width:700px;margin:56px auto 0;
+}
+.stat{
+  flex:1;padding:20px 16px;text-align:center;
+  border-right:1px solid var(--border);
+}
+.stat:last-child{border-right:none}
+.stat-val{font-size:1.8rem;font-weight:800;color:var(--green);font-family:var(--mono);line-height:1}
+.stat-lab{font-size:11px;color:var(--muted);margin-top:5px;text-transform:uppercase;letter-spacing:.6px}
+
+/* ── SECTION ── */
+section{padding:96px 24px}
+.section-inner{max-width:1100px;margin:0 auto}
+.section-label{
+  font-size:11px;font-family:var(--mono);color:var(--green);
+  letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;
+}
+.section-title{font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:800;letter-spacing:-.02em;margin-bottom:16px}
+.section-sub{color:var(--muted);font-size:1rem;max-width:580px;line-height:1.7;margin-bottom:52px}
+
+/* ── PIPELINE ── */
+.pipeline{display:flex;align-items:flex-start;gap:0;overflow-x:auto;padding-bottom:8px}
+.pipeline-step{
+  flex:1;min-width:160px;
+  display:flex;flex-direction:column;align-items:center;
+  position:relative;
+}
+.pipeline-step:not(:last-child)::after{
+  content:'→';position:absolute;right:-18px;top:28px;
+  color:var(--border);font-size:20px;font-weight:300;
+}
+.p-icon{
+  width:56px;height:56px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;margin-bottom:14px;
+  border:1px solid;
+}
+.p-name{font-size:12px;font-weight:700;margin-bottom:4px;text-align:center}
+.p-tech{font-size:10px;font-family:var(--mono);color:var(--muted);text-align:center;line-height:1.5}
+
+/* ── KPI GRID ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.kpi-card{
+  border-radius:12px;padding:20px;border:1px solid;
+  transition:transform .2s,box-shadow .2s;
+}
+.kpi-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.3)}
+.kpi-icon{font-size:22px;margin-bottom:10px}
+.kpi-name{font-size:13px;font-weight:700;margin-bottom:4px}
+.kpi-desc{font-size:11px;color:var(--muted);line-height:1.5}
+.kpi-val{
+  font-size:1.4rem;font-weight:800;font-family:var(--mono);
+  margin-top:10px;color:var(--green);
+}
+
+/* ── TECH STACK ── */
+.tech-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.tech-card{
+  border-radius:10px;padding:16px 18px;
+  background:var(--bg2);border:1px solid var(--border);
+  display:flex;align-items:center;gap:12px;
+  transition:border-color .2s;
+}
+.tech-card:hover{border-color:var(--green)}
+.tech-logo{font-size:24px;flex-shrink:0}
+.tech-name{font-size:13px;font-weight:600}
+.tech-role{font-size:11px;color:var(--muted)}
+
+/* ── SECURITY ── */
+.sec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.sec-item{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:16px;border-radius:10px;
+  background:var(--bg2);border:1px solid var(--border);
+}
+.sec-ic{font-size:20px;flex-shrink:0;margin-top:2px}
+.sec-t{font-size:13px;font-weight:600;margin-bottom:3px}
+.sec-d{font-size:11px;color:var(--muted);line-height:1.5}
+
+/* ── FOOTER ── */
+footer{
+  border-top:1px solid var(--border);
+  padding:40px 24px;text-align:center;
+  color:var(--muted);font-size:12px;
+}
+footer a{color:var(--green);text-decoration:none}
+.footer-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+
+/* ── DIVIDER ── */
+.divider{height:1px;background:var(--border);margin:0 auto;max-width:1100px}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  nav{padding:0 20px}
+  .nav-links{display:none}
+  .stats{flex-direction:column;border-radius:12px}
+  .stat{border-right:none;border-bottom:1px solid var(--border)}
+  .stat:last-child{border-bottom:none}
+  .pipeline{flex-direction:column;gap:20px}
+  .pipeline-step:not(:last-child)::after{display:none}
+  .footer-inner{flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="nav-dot">GC</div>
+    Green Control BI
+  </div>
+  <div class="nav-links">
+    <a href="#architettura">Architettura</a>
+    <a href="#kpi">KPI</a>
+    <a href="#stack">Stack</a>
+    <a href="#security">Security</a>
+  </div>
+  <a href="https://github.com/brancaleonidylan-cyber/project_workifoa2026" target="_blank" class="nav-cta">GitHub →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">
+    <span class="badge-dot"></span>
+    Project Work IFOA 2026 · BI Analyst
+  </div>
+  <h1>Sistema di <span>Business Intelligence</span><br>per Green Control</h1>
+  <p>Pipeline completa Excel → ETL Python → MySQL Data Warehouse → Power BI → Streamlit. Dati operativi trasformati in decisioni strategiche per un'azienda reale di disinfestazione.</p>
+  <div class="hero-btns">
+    <a href="#architettura" class="btn-primary">Esplora il progetto</a>
+    <a href="https://github.com/brancaleonidylan-cyber/project_workifoa2026" target="_blank" class="btn-secondary">Vedi il codice →</a>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-val">689</div><div class="stat-lab">Righe caricate</div></div>
+    <div class="stat"><div class="stat-val">7</div><div class="stat-lab">KPI strategici</div></div>
+    <div class="stat"><div class="stat-val">€5.740</div><div class="stat-lab">CLV medio cliente</div></div>
+    <div class="stat"><div class="stat-val">5</div><div class="stat-lab">Layer architetturali</div></div>
+    <div class="stat"><div class="stat-val">50h</div><div class="stat-lab">SLA medio risposta</div></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ARCHITETTURA -->
+<section id="architettura">
+  <div class="section-inner">
+    <div class="section-label">// Architettura</div>
+    <h2 class="section-title">Pipeline end-to-end in 5 layer</h2>
+    <p class="section-sub">Ogni layer ha una responsabilità precisa. I dati scorrono in un unico verso: dalla fonte grezza alla decisione strategica.</p>
+
+    <div class="pipeline">
+      <div class="pipeline-step">
+        <div class="p-icon" style="background:#1a1a1a;border-color:#333;color:#9CA3AF">📊</div>
+        <div class="p-name" style="color:#9CA3AF">01 · Fonte</div>
+        <div class="p-tech">Excel aziendale<br>7 fogli · 689 righe<br>greencontrol_db_excel.xlsx</div>
+      </div>
+      <div class="pipeline-step">
+        <div class="p-icon" style="background:#1A1500;border-color:#3D2E00;color:#FCD34D">⚙️</div>
+        <div class="p-name" style="color:#FCD34D">02 · ETL Python</div>
+        <div class="p-tech">pandas · bcrypt<br>Pulizia + arricchimento<br>SLA · prezzi · lead</div>
+      </div>
+      <div class="pipeline-step">
+        <div class="p-icon" style="background:#0A1F16;border-color:#1A3D2B;color:#6EE7B7">🏛️</div>
+        <div class="p-name" style="color:#6EE7B7">03 · Data Warehouse</div>
+        <div class="p-tech">MySQL 8.0<br>8 tabelle · 5 view<br>Schema star</div>
+      </div>
+      <div class="pipeline-step">
+        <div class="p-icon" style="background:#120D1E;border-color:#2D2060;color:#C4B5FD">📉</div>
+        <div class="p-name" style="color:#C4B5FD">04 · Power BI</div>
+        <div class="p-tech">4 pagine DAX<br>Heatmap · Gauge<br>Mappa Italia</div>
+      </div>
+      <div class="pipeline-step">
+        <div class="p-icon" style="background:#0C1626;border-color:#1E3A5F;color:#93C5FD">🌐</div>
+        <div class="p-name" style="color:#93C5FD">05 · Web App</div>
+        <div class="p-tech">Streamlit · Plotly<br>Login bcrypt<br>5 pagine live</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- KPI -->
+<section id="kpi" style="background:var(--bg2)">
+  <div class="section-inner">
+    <div class="section-label">// KPI Strategici</div>
+    <h2 class="section-title">7 indicatori che guidano le decisioni</h2>
+    <p class="section-sub">Ogni KPI risponde a una domanda di business reale. Non numeri fini a se stessi — strumenti operativi.</p>
+
+    <div class="kpi-grid">
+      <div class="kpi-card" style="background:#0A1F16;border-color:#1A3D2B">
+        <div class="kpi-icon">⚡</div>
+        <div class="kpi-name">SLA Risposta</div>
+        <div class="kpi-desc">Ore dalla chiamata all'intervento. Leva marketing: "interveniamo entro X ore, garantito".</div>
+        <div class="kpi-val">50h media</div>
+      </div>
+      <div class="kpi-card" style="background:#1A1500;border-color:#3D2E00">
+        <div class="kpi-icon">📉</div>
+        <div class="kpi-name">Churn Rate</div>
+        <div class="kpi-desc">% clienti senza interventi da oltre 365 giorni. Identifica chi rischia di non rinnovare.</div>
+        <div class="kpi-val" style="color:var(--amber)">76%</div>
+      </div>
+      <div class="kpi-card" style="background:#0A1F16;border-color:#1A3D2B">
+        <div class="kpi-icon">💰</div>
+        <div class="kpi-name">CLV Medio</div>
+        <div class="kpi-desc">Customer Lifetime Value per cliente attivo. Perdere un cliente costa €5.740 di mancato fatturato.</div>
+        <div class="kpi-val">€5.740</div>
+      </div>
+      <div class="kpi-card" style="background:#120D1E;border-color:#2D2060">
+        <div class="kpi-icon">🎯</div>
+        <div class="kpi-name">Conversion Rate</div>
+        <div class="kpi-desc">Da lead a cliente pagante per canale. Passaparola 70% vs Facebook Ads 15%.</div>
+        <div class="kpi-val" style="color:#C4B5FD">37% medio</div>
+      </div>
+      <div class="kpi-card" style="background:#0C1626;border-color:#1E3A5F">
+        <div class="kpi-icon">👷</div>
+        <div class="kpi-name">Performance Tecnici</div>
+        <div class="kpi-desc">Fatturato, tasso successo, soddisfazione per tecnico. Sistema oggettivo di valutazione.</div>
+        <div class="kpi-val" style="color:#93C5FD">5 tecnici</div>
+      </div>
+      <div class="kpi-card" style="background:#0A1F16;border-color:#1A3D2B">
+        <div class="kpi-icon">💸</div>
+        <div class="kpi-name">Fatturato</div>
+        <div class="kpi-desc">Trend mensile con linea media e proiezione. €367K totale · €12.842 media mensile.</div>
+        <div class="kpi-val">€367K</div>
+      </div>
+      <div class="kpi-card" style="background:#1A1500;border-color:#3D2E00">
+        <div class="kpi-icon">📅</div>
+        <div class="kpi-name">Stagionalità</div>
+        <div class="kpi-desc">Heatmap 6 infestanti × 12 mesi. Pianifica assunzioni stagionali e campagne preventive.</div>
+        <div class="kpi-val" style="color:var(--amber)">6 × 12</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- STACK -->
+<section id="stack">
+  <div class="section-inner">
+    <div class="section-label">// Stack Tecnologico</div>
+    <h2 class="section-title">Tecnologie scelte con un motivo</h2>
+    <p class="section-sub">Ogni scelta tecnologica ha una motivazione di business, non solo tecnica.</p>
+
+    <div class="tech-grid">
+      <div class="tech-card">
+        <div class="tech-logo">🐍</div>
+        <div><div class="tech-name">Python 3.13</div><div class="tech-role">ETL · KPI · Security</div></div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-logo">🐼</div>
+        <div><div class="tech-name">pandas 2.x</div><div class="tech-role">Trasformazione dati</div></div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-logo">🗄️</div>
+        <div><div class="tech-name">MySQL 8.0</div><div class="tech-role">Data Warehouse</div></div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-logo">📊</div>
+        <div><div class="tech-name">Power BI</div><div class="tech-role">Dashboard direzionale</div></div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-logo">🌿</div>
+        <div><div class="tech-name">Streamlit</div><div class="tech-role">Web app gestionale</div></div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-logo">📈</div>
+        <div><div class="tech-name">Plotly</div><div class="tech-role">Grafici interattivi</div></div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-logo">🔐</div>
+        <div><div class="tech-name">bcrypt</div><div class="tech-role">Hashing password</div></div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-logo">📝</div>
+        <div><div class="tech-name">VS Code</div><div class="tech-role">Ambiente sviluppo</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SECURITY -->
+<section id="security" style="background:var(--bg2)">
+  <div class="section-inner">
+    <div class="section-label">// Security</div>
+    <h2 class="section-title">12 layer di protezione</h2>
+    <p class="section-sub">La sicurezza non è un'aggiunta — è trasversale a tutta la pipeline, dalla fonte al frontend.</p>
+
+    <div class="sec-grid">
+      <div class="sec-item">
+        <div class="sec-ic">🔒</div>
+        <div><div class="sec-t">Credenziali in .env</div><div class="sec-d">Nessuna password nel codice. File .env escluso da Git via .gitignore.</div></div>
+      </div>
+      <div class="sec-item">
+        <div class="sec-ic">🔑</div>
+        <div><div class="sec-t">bcrypt 12 rounds</div><div class="sec-d">300ms per hash per design. Brute force computazionalmente impraticabile.</div></div>
+      </div>
+      <div class="sec-item">
+        <div class="sec-ic">🚫</div>
+        <div><div class="sec-t">Blocco brute force</div><div class="sec-d">Account bloccato automaticamente dopo 5 tentativi falliti consecutivi.</div></div>
+      </div>
+      <div class="sec-item">
+        <div class="sec-ic">📋</div>
+        <div><div class="sec-t">Audit log accessi</div><div class="sec-d">Ogni accesso (OK/FALLITO/BLOCCATO) registrato con timestamp nel DB.</div></div>
+      </div>
+      <div class="sec-item">
+        <div class="sec-ic">👤</div>
+        <div><div class="sec-t">Ruoli utente</div><div class="sec-d">3 ruoli: admin · operator · viewer. Accesso granulare per pagina.</div></div>
+      </div>
+      <div class="sec-item">
+        <div class="sec-ic">🛡️</div>
+        <div><div class="sec-t">Query parametrizzate</div><div class="sec-d">Zero concatenazione stringhe nelle query. SQL injection impossibile.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <strong style="color:var(--text)">Dylan Brancaleoni</strong> · BI Analyst · IFOA 2026
+    </div>
+    <div style="display:flex;gap:20px;align-items:center">
+      <a href="https://github.com/brancaleonidylan-cyber/project_workifoa2026" target="_blank">GitHub</a>
+      <span style="color:var(--border)">·</span>
+      <span>Stack: Python · MySQL · Power BI · Streamlit</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Scroll progress bar
+window.addEventListener('scroll', () => {
+  const el = document.getElementById('progress');
+  const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+  el.style.width = Math.min(pct, 100) + '%';
+});
+
+// Fade-in on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.kpi-card, .tech-card, .sec-item, .pipeline-step').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = 'opacity .5s ease, transform .5s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
